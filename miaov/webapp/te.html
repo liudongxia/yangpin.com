@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <style>
+        #show{}
+        .box{
+            float: left;
+            margin: 10px;
+        }
+        .wrap{
+            border: 1px solid #920049;
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        #cart{
+            position: absolute;
+            top:50px;
+            left:600px;
+        }
+        .u-flyer{
+            display: block;width: 50px;height:50px;border-radius: 50px;position: fixed;;z-index: 9999;
+        }
+        #add-success{
+            display: none;
+            position: absolute;
+            top:40%;
+            left:40%;
+            background-color: #83d045;
+            opacity: 0.6;
+            width: 120px;
+            height: 30px;
+        }
+        #showCart{
+            width: 343px;
+            height: auto;
+            position: relative;
+            top:15px;
+            left:0;
+            border: 1px solid #858484;
+            font-size: 13px;
+            display: none;
+            padding-bottom: 50px;
+        }
+        #tb-cart{
+            padding: 10px 15px 0 15px;
+            background: url(Images/cartBG.jpg) no-repeat 0 0;
+        }
+        #showCart thead{
+            text-align: left;
+            font-size: 12px;
+            font-weight: normal;
+            color: red;
+        }
+        #showCart tbody{
+        }
+        .pro td{
+            margin-bottom: 10px;
+            margin-right: 15px;
+        }
+        .pro .checkBox{
+            text-align: center;
+        }
+        .pro img{
+            width: 50px;
+            height: 50px;
+        }
+        .amount input{
+            width: 15px;
+        }
+        .pro .amount{
+            width:80px;
+        }
+        .pro .price{
+            padding-right: 15px;
+        }
+        .sumPrice{
+            text-align: right;
+        }
+        .pro input{
+            text-align: center;
+        }
+        .pro .delete button{
+            border-radius: 3px;
+        }
+        .showName{
+            font-size: 10px;
+            color:red;
+        }
+        .reduce,.add{
+            visibility: hidden;
+        }
+        #sum_price{
+            font-size: 16px;
+            color:#920049;
+            position: absolute;
+            bottom:0;
+            right: 50%;
+        }
+        #settlement{
+            width: 100px;
+            height: 35px;
+            border-radius: 5px;
+            font-size: 16px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+    </style>
+    <script src="js/jquery-3.1.1.js"></script>
+    <script src="js/jquery.fly.min.js"></script>
+    <script>
+        $(function () {
+            var offset=$("#cart").offset();
+            $(".addCart").click(function (event) {
+                var addcar=$(this);
+                var showname=addcar.parent().find('.showName').text();
+                var img=addcar.children('img').attr('src');
+                var name=addcar.children('h5').text();
+                var price=Number(addcar.children('span').text().slice(1));
+                var flyer=$('<img class="u-flyer" src="'+img+'">');
+                var sumPrice=price;
+
+
+
+                flyer.fly({
+                    start:{
+                        left:event.pageX,
+                        top:event.pageY
+                    },
+                    end:{
+                        left:offset.left+10,
+                        top:offset.top+10,
+                        width:0,
+                        height:0
+                    },
+                    onEnd:function () {
+                        $('#add-success').show().fadeOut(1000);
+                        var $showPlace=$('#showCart');
+                        var $html=$showPlace.html();
+                        if($html.indexOf(showname)==-1){
+                            var html=
+                                '<table id="tb-cart">'+
+                                '<thead>'+
+                                '<tr><th colspan="3">'+showname+'</th>'+
+                                '<th class="sumPrice" colspan="2"><h4>￥<span>'+sumPrice+'</span></h4></th>'+
+                                '</tr></thead>'+
+                                '<tbody><tr class="pro">' +
+                                '<td class="checkBox"><input type="checkbox"></td>'+
+                                '<td class="img"><img src="'+img+'" title="'+name+'"></td>'+
+                                '<td class="amount"><button class="reduce">-</button><input type="text" value="1" min="1"><button class="add">+</button></td>'+
+                                '<td class="price"><h4>￥<span>'+price+'</span></td>'+
+                                '<td class="delete"><button>删除商品</button></td>'+
+                                '</tr></tbody></table>';
+
+                            $showPlace.html($html+html);
+                        }
+                        else{
+                            var ts=$showPlace.children('#tb-cart').find('th:contains('+showname+')');
+                            var t=ts.parent().parent().siblings().find('.amount').children('input');
+                            var val=parseInt(t.val());
+                            t.val(val+1);
+
+                        }
+
+
+                        $('td.amount').hover(function () {
+                            var $re=$(this).children('.reduce');
+                            var $add=$re.siblings('.add');
+                            $re.css('visibility','visible');
+                            $add.css('visibility','visible');
+                        },function () {
+                            var $re=$(this).children('.reduce');
+                            var $add=$re.siblings('.add');
+                            $re.css('visibility','hidden');
+                            $add.css('visibility','hidden');
+                        });
+
+                        $(".add").click(function () {
+                            var $this=$(this);
+                            var $sib_input=$this.siblings('input');
+                            var $sib_reduce=$this.siblings('.reduce');
+                            var $price=$this.parent().siblings('.price').find('span').text();
+                            var $sumPrice=$this.parents('#tb-cart').find('.sumPrice').find('span');
+                            var $val=parseInt($sib_input.val());
+                            $sib_input.val($val+1);
+                            $sib_reduce.css('cursor','pointer');
+                            $sumPrice.text(($price*$sib_input.val()).toFixed(2));
+                            var $sibPrice=$this.parents('#showCart').find('.sumPrice').find('span');
+                            var i=0;
+                            $.each($sibPrice,function (index,item) {
+                                i+=parseInt(item.innerHTML);
+                            });
+                            $('#sum_price').text('￥'+i.toFixed(2));
+                        });
+                        $(".reduce").click(function () {
+                            var $this=$(this);
+                            var $sib_input=$this.siblings('input');
+                            var $val=parseInt($sib_input.val());
+                            var $price=$this.parent().siblings('.price').find('span').text();
+                            var $sumPrice=$this.parents('#tb-cart').find('.sumPrice').find('span');
+                            if($val<=1){
+                                $this.css('cursor','no-drop');
+                            }
+                            else{
+                                $sib_input.val($val-1);
+                            }
+                            $sumPrice.text(($price*$sib_input.val()).toFixed(2));
+                            var $sibPrice=$this.parents('#showCart').find('.sumPrice').find('span');
+                            var i=0;
+                            $.each($sibPrice,function (index,item) {
+                                i+=parseInt(item.innerHTML);
+                            });
+                            $('#sum_price').text('￥'+i.toFixed(2));
+                        });
+                        $('.delete button').click(function () {
+                            var result=confirm("是否删除商品？");
+                            var $this=$(this);
+                            if(result){
+                                $this.parent().parent().parent().parent().remove();
+                                var $tr=$('#tb-cart tr');
+                                var num=$tr.length;
+                                for(var i=0;i<num;i++){
+                                    $tr.eq(i).find('.num').text((i+1)+".");
+                                }
+                            }
+                            var $sibPrice=$('#showCart').find('.sumPrice').find('span');
+                            var q=0;
+                            $.each($sibPrice,function (index,item) {
+                                q+=parseInt(item.innerHTML);
+                            });
+                            $('#sum_price').text('￥'+q.toFixed(2));
+                        });
+
+                    }
+                });
+            });
+            $('#cart').hover(function () {
+                var $show=$('#showCart');
+                var td=$show.find('#tb-cart');
+                if(td.length){
+
+                }
+                $show.css('display','block');
+            },function () {
+                $("#showCart").css('display','none');
+            });
+
+        })
+    </script>
+</head>
+<body>
+    <div id="show">
+        <div class="box">
+            <div class="wrap">
+                <img src="Images/seiba.jpg" alt="">
+                <h4>￥<span class="price_">150.00</span></h4>
+                <p class="name_">seiba手办</p>
+                <span class="showName">fengxing旗舰店</span>
+            </div>
+            <button class="addCart">加入购物车</button>
+        </div>
+        <div class="box">
+            <div class="wrap">
+                <img src="Images/seiba.jpg" alt="">
+                <h4>￥<span class="price_">150.00</span></h4>
+                <p class="name_">seiba手办</p>
+                <span class="showName">fengxing旗舰店</span>
+            </div>
+            <button class="addCart">加入购物车</button>
+        </div>
+        <div class="box">
+            <div class="wrap">
+                <img src="Images/seiba.jpg" alt="">
+                <h4>￥<span class="price_">150.00</span></h4>
+                <p class="name_">seiba手办</p>
+                <span class="showName">动漫手办旗舰店</span>
+            </div>
+            <button class="addCart">加入购物车</button>
+        </div>
+    </div>
+    <div id="cart">
+        <i class="fa fa-cart-plus" id="cart-btn"></i>
+        <div id="showCart">
+            <div>
+                <span id="sum_price"></span>
+                <button id="settlement">结算</button>
+            </div>
+        </div>
+    </div>
+    <div id="add-success">加入购物车成功</div>
+</body>
+</html>

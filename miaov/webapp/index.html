@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>泱品网-快乐生活每一天</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/ui-dialog.css">
+    <link rel="stylesheet" href="css/tipsy.css">
+    <link rel="stylesheet" href="css/iziModal.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <script src="js/jquery-3.1.1.js"></script>
+    <script src="js/Carousel.js"></script>
+    <script src="js/dialog.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/jquery.tipsy.js"></script>
+    <script src="js/iziModal.js"></script>
+    <script src="js/js-plugins.js"></script>
+    <script src="js/countdown.js"></script>
+    <script src="js/jquery.fly.min.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+        $(function () {
+            carousel();
+            $(".search").on("keyup", function (e) {
+                e.preventDefault();
+                if (e.which == 13) {
+                    Tool.dialog('#modal-alert2',{title: '操作成功',subtitle:'小编正在拼命加载，请您耐心等候！',headerColor:'#920049',width:'300px'});
+                }
+
+            }).on("click",".btn", function (e) {
+                e.preventDefault();
+                Tool.dialog('#modal-alert2',{title: '操作成功',subtitle:'小编正在拼命加载，请您耐心等候！',headerColor:'#920049',width:'300px'});
+            });
+
+            $('.login').click(function (e) {
+                e.preventDefault();
+                Tool.dialog('#modal-default',{title: '登录泱品网',headerColor:'#df317f',width:'500px',onOpened:function () {
+                    Tool.tip('#form1 [original-title]',{trigger:'focus',position:'w',offset:'15px'});
+                    var $input=$('#form1 [original-title]');
+                    $input.on("focus",function () {
+                        var $this=$(this);
+                        $this.next("i").css('visibility','hidden');
+                    }).on("blur",function () {
+                        var $this=$(this);
+                        var value=$this.val();
+                        if(value==""||value==undefined){
+                            $this.next("i").css('visibility','visible');
+                        }else {
+                            $this.css('background','none');
+                        }
+                    });
+                    $("#login_in").on("click",function (e) {
+                        var $Account=$("#account");
+                        var $Password=$("#password");
+                        var $Avalue=$Account.val();
+                        var $Pvalue=$Password.val();
+                        if(($Avalue=="")||($Pvalue=="")){
+                            if($Avalue==""){
+                                $Account.focus();
+                                $Account.css("background-color","#FFF8DC");
+                                e.preventDefault();
+                            }
+                            else if($Pvalue==""){
+                                $Password.focus();
+                                $Password.css("background-color","#FFF8DC");
+                                e.preventDefault();
+                            }
+                        }
+                        else {
+                            if($Pvalue.length<6){
+                                $Password.focus();
+                                $Password.css("background-color","#FFF8DC");
+                                e.preventDefault();
+                            }
+                            else {
+                                alert("欢迎你！"+$Avalue);
+                            }
+
+                        }
+                    })
+                }
+                });
+            });
+
+            Tool.tip('[title]',{fade:true,position:'w',offset:'100px'});
+
+            $(".closed").click(function () {
+                $("#showCart").animate({left:"100%"},1000);
+            })
+        })
+    </script>
+    <style>
+        #modal-default{
+            font-size: 13px;
+        }
+        #modal-default .wrap{
+           margin: 15px auto;
+            width: 362px;
+        }
+        #modal-default .input{
+            display: inline-block;
+            border: 1px solid #df317f;
+            height: 30px;
+            width: 314px;
+            margin-top: 15px;
+            padding-left: 15px;
+        }
+        #modal-default button{
+            width: 200px;
+            height:30px;
+            background-color: #df317f;
+            margin:15px 81px;
+            color: white;
+            border-radius:5px;
+            display: inline-block;
+        }
+        #modal-default .wrap a{
+            color: #df317f;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .wrap form span{
+            color: #920049;
+            height: 30px;
+            width: 30px;
+            border-left:1px solid #df317f;
+            border-top:1px solid #df317f;
+            border-bottom:1px solid #df317f;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            line-height: 32px;
+        }
+        #form1 i{
+            font-size: 9px;
+            color:red;
+            visibility: hidden;
+        }
+        .wrap>.fa{
+            display: inline-block;
+            margin: 15px 5px;
+        }
+        .wrap>.fa:hover{
+            color:#df317f;
+        }
+        .wrap p{
+            margin-top: 15px;
+        }
+
+
+        /*cart style*/
+
+
+
+        .u-flyer{
+            display: block;width: 50px;height:50px;border-radius: 50px;position: fixed;;z-index: 9999;
+        }
+        #showCart{
+
+            margin-top:15px;
+            width: 343px;
+            height: 90%;
+            position: fixed;
+            top:0;
+           left: 100%;
+            border: 1px solid #858484;
+            border-radius: 5px;
+            font-size: 13px;
+            padding-bottom: 50px;
+            background: #fff url(Images/seiba1.jpg) 0 0 no-repeat;
+            z-index: 9999;
+        }
+        #tb-cart{
+            padding: 10px 15px 0 15px;
+        }
+        #tb-cart thead{
+            text-align: left;
+            font-size: 12px;
+            font-weight: normal;
+            color: red;
+        }
+        #tb-cart tbody{
+        }
+        .pro td{
+            margin-bottom: 10px;
+            margin-right: 10px;
+        }
+        .pro button{
+            background-color: #920049;
+            cursor: pointer;
+            padding: 5px;
+            color: #fff;
+        }
+        .pro .checkBox{
+            text-align: center;
+        }
+        .pro img{
+            width: 50px;
+            height: 50px;
+        }
+        .amount input{
+            width: 15px;
+        }
+        .pro .amount{
+            width:80px;
+        }
+        .pro .price{
+            padding-right: 10px;
+        }
+        .sumPrice{
+            text-align: right;
+        }
+        .pro input{
+            text-align: center;
+        }
+        .pro .delete button{
+            width: 80px;
+            border-radius: 3px;
+        }
+        .showName{
+            font-size: 10px;
+            color:red;
+        }
+        .reduce,.add{
+            visibility: hidden;
+        }
+        #sum_price{
+            color:#920049;
+            position: absolute;
+            bottom: 15px;
+            right: 50%;
+        }
+        #settlement{
+            width: 100px;
+            height: 35px;
+            border-radius: 5px;
+            font-size: 16px;
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: #920049;
+            cursor: pointer;
+            color: #fff;
+        }
+        .closed{
+            height: 30px;
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+<div id="showCart">
+    <div class="closed"><a href="#"><i class="fa fa-2x fa-times fr" aria-hidden="true" style="margin-right: 15px;color: #920049;"></i></a></div>
+    <div>
+        <h2 id="sum_price">共计：￥0.00</h2>
+        <button id="settlement">结算</button>
+    </div>
+</div>
+<div id="modal-alert3" class="iziModal" style="border-bottom: 3px solid orange; margin-left: -300px; max-width: 400px; margin-top: -34px; overflow: hidden; display: none;"></div>
+<div id="modal-default" class="iziModal" style="background:#fff url(Images/seiba.jpg) right bottom no-repeat;border-bottom: 3px solid rgb(136, 160, 185); margin-left: -350px; max-width: 700px; margin-top: -159px; overflow: hidden;">
+    <div class="wrap">
+        <form id="form1">
+            <span class="fa fa-user-o" aria-hidden="true"></span><input id="account" type="text" title="请输入至少3位的用户名" placeholder="输入帐号" minlength="3" class="input"><i>请输入用户名</i><br>
+            <span class="fa fa-key" aria-hidden="true"></span><input id="password" type="password" title="请输入6~16位密码" placeholder="输入密码" minlength="6" maxlength="16" class="input">
+            <i>请输入密码</i><br>
+            <input type="checkbox" value="记住密码" style="width: auto;">记住密码
+            <a href="#" class="forget" style="margin-left: 240px;">忘记密码</a>
+            <button type="submit" value='' id="login_in">登录</button>
+        </form>
+        <a href="#" class="zhuce"  style="margin-left: 238px;">还没有帐号?立即注册</a>
+    </div>
+    <hr style="width: 72%;">
+    <div class="wrap">
+        <p>还可以用以下帐号登录:</p>
+        <i class="fa fa-2x fa-qq" aria-hidden="true" title="QQ登录"></i>
+        <i class="fa fa-2x fa-weixin" aria-hidden="true" title="Wechat登录"></i>
+    </div>
+</div>
+<div id="top">
+    <ul class="top_menu fl">
+        <li class="dot fl"><a>泱品网</a></li>
+        <li class="dot fl"><a href="#">
+            <ul class="site_map">
+                <li class="house fl"><a href="index.html">泱品农商网</a></li>
+                <li class="fl"><a href="index.html">首页</a></li>
+                <li class="fl"><a href="detail.html">企业采购</a></li>
+                <li class="fl"><a href="detail.html">泱农易购</a></li>
+                <li class="fl"><a href="detail.html">农业服务</a></li>
+                <li class="fl"><a href="detail.html">品牌商家</a></li>
+            </ul>
+        </a></li>
+    </ul>
+    <ul class="top_bar fr">
+        <li class="dot fl"><a href="#">用户中心</a></li>
+        <li class="dot fl">
+            <a href="#" class="login">登录</a>
+        </li>
+        <li class="no_dot fl">关注我们:
+            <a href="#"><img src="Images/top_icon/weibo_icon.png" id="weibo" alt="微博图标"></a>
+            <div id="modal-alert0" class="iziModal">
+                <img src="Images/weibo关注.jpg" alt="weibo关注" style="width: 200px;height: 200px;text-align: center;">
+            </div>
+            <a href="#"><img src="Images/top_icon/weichat_icon.png" id="weixin" alt="微信图标"></a>
+            <div id="modal-alert1" class="iziModal">
+                <img src="Images/weixin关注1.jpg" alt="weixin关注" style="width: 200px;height: 200px;text-align: center;">
+            </div>
+        </li>
+
+    </ul>
+    <script>
+        $(function () {
+
+            $("#modal-alert0").iziModal({
+                title: "扫描下面二维码关注我们",
+                headerColor: 'pink',
+                width: 250
+            });
+            $("#modal-alert1").iziModal({
+                title: "扫描下面二维码关注我们",
+                headerColor: 'pink',
+                width: 250
+            });
+            $(document).on('click', '#weibo', function (event) {
+                event.preventDefault();
+                $('#modal-alert0').iziModal('open');
+            });
+            $(document).on('click', '#weixin', function (event) {
+                event.preventDefault();
+                $('#modal-alert1').iziModal('open');
+            });
+            $('#cart-btn').click(function () {
+                var $show=$('#showCart');
+                var td=$show.find('#tb-cart');
+                if(td.length<1){
+                    var $div=$("<div id='none' style='background:#fff url(Images/seiba3.jpg) 80px 15px no-repeat;height:300px;position: absolute;top:40%;left: 10%;font-size: 16px;'>你的购物车里什么都没有，<a href='index.html'>快去逛逛吧</a></div>");
+                    $($show).append($div);
+                }
+
+                $show.animate({left:'82%'},1000);
+            });
+            $("#modal-alert3").iziModal({
+                title: "已结算",
+                headerColor: 'green',
+                width: 250
+            });
+            $("#settlement").click(function () {
+                event.preventDefault();
+                $('#modal-alert3').iziModal('open');
+            })
+        })
+
+    </script>
+</div>
+<div id="header">
+    <div id="logo fl">
+        <a href="#">
+            <div id="logo_img"></div>
+        </a>
+    </div>
+    <div class="search fr">
+        <div style="height: 42px;" class="sousuo">
+            <input type="text" value="" class="text">
+            <input type="submit" value="" class="btn">
+            <div id="modal-alert2" class="iziModal" style="border-bottom: 3px solid orange; margin-left: -300px; max-width: 400px; margin-top: -34px; overflow: hidden; display: none;"></div>
+        </div>
+
+        <dl class="hot_list">
+            <dt class="fl">热门搜索：</dt>
+            <dd class="fl">
+                <a href="#" class="a b c d e f">蔬菜采购</a>
+                <a href="#" class="a b c d e f">肉类采购</a>
+                <a href="#">水果采购</a>
+                <a href="#">水产采购</a>
+            </dd>
+        </dl>
+    </div>
+</div>
+<div id="navBox">
+    <div class="shop_class fl">
+        <h3>精选商品分类</h3>
+    </div>
+    <ul class="nav fl">
+        <li class="fl"><a href="#">首页</a></li>
+        <li class="fl"><a href="#">特产</a></li>
+        <li class="fl"><a href="#">礼尚往来</a></li>
+        <li class="fl"><a href="#">混合购</a></li>
+    </ul>
+</div>
+<div id="main_body">
+    <div class="adv clear">
+        <div class="shopClass_show">
+            <dl class="shopClass_item">
+                <dt style="background: url(Images/class_icon.png) 10px 0 no-repeat;"><a href="#">粮油</a></dt>
+                <dd>
+                    <a href="#">肉类</a>
+                    <a href="#">水产海鲜</a>
+                    <a href="#">蔬菜</a>
+                    <a href="#">水果</a>
+                    <a href="#">蛋类</a>
+                </dd>
+            </dl>
+            <dl class="shopClass_item">
+                <dt style="background: url(Images/class_icon.png) 10px -60px no-repeat;"><a href="#">调味配料</a></dt>
+                <dd>
+                    <a href="#">酱油</a>
+                    <a href="#">醋</a>
+                    <a href="#">腐乳</a>
+                    <a href="#">芝麻油</a>
+                    <a href="#">料酒</a>
+                    <a href="#">调味料</a>
+                    <a href="#">腌料</a>
+                    <a href="#">汤料</a>
+                </dd>
+            </dl>
+            <dl class="active">
+                <dt style="background: url(Images/class_icon.png) 10px -120px no-repeat;"><a href="#">零食</a></dt>
+                <dd>
+                    <a href="#">牛肉干</a>
+                    <a href="#">鸭脖</a>
+                    <a href="#">猪肉脯</a>
+                </dd>
+            </dl>
+            <dl class="shopClass_item">
+                <dt style="background: url(Images/class_icon.png) 10px -180px no-repeat;"><a href="#">米面</a></dt>
+                <dd>
+                    <a href="#">豆类</a>
+                    <a href="#">粉丝</a>
+                    <a href="#">杂粮</a>
+                    <a href="#">挂面</a>
+                </dd>
+            </dl>
+            <dl class="shopClass_item">
+                <dt style="background: url(Images/class_icon.png) 10px -240px no-repeat;"><a href="#">干货蜜饯</a></dt>
+                <dd>
+                    <a href="#">香菇</a>
+                    <a href="#">木耳</a>
+                    <a href="#">枸杞</a>
+                    <a href="#">银耳</a>
+                    <a href="#">桂圆</a>
+                    <a href="#">山楂</a>
+                    <a href="#">枣</a>
+                    <a href="#">栗子</a>
+                </dd>
+            </dl>
+        </div>
+        <div class="secondary_menu">
+            <dl class="menu_item">
+                <dt class="fl"><a href="#">曲奇</a>/<a href="#">饼干</a></dt>
+                <dd class="fl">
+                    <a href="#">曲奇</a>
+                    <a href="#">饼干</a>
+                    <a href="#">威化</a>
+                </dd>
+            </dl>
+            <dl class="menu_item">
+                <dt class="fl"><a href="#">糕点</a>/<a href="#">烘焙</a></dt>
+                <dd class="fl">
+                    <a href="#">马卡龙</a>
+                    <a href="#">面包</a>
+                    <a href="#">蛋糕/派</a>
+                    <a href="#">沙琪玛</a>
+                    <a href="#">传统蛋糕</a>
+                </dd>
+            </dl>
+        </div>
+        <div class="adv_carousel">
+        </div>
+        <div class="right_advBar fl">
+            <ul class="right_advItem">
+                <li><a href="#"><img src="Images/sale_img/sale01.png" alt=""></a></li>
+                <li><a href="#"><img src="Images/sale_img/sale02.png" alt=""></a></li>
+                <li><a href="#"><img src="Images/sale_img/sale03.png" alt=""></a></li>
+            </ul>
+        </div>
+        <div id="adv-smallBar">
+            <ul class="right_smallItem">
+                <li title="查看购物车" id="cart">
+                    <a href="#"><i class="fa fa-2x fa-cart-plus" id="cart-btn"></i></a>
+                </li>
+                <li title="浏览足迹"><a href="#"><i class="fa fa-2x fa-paw"></i></a></li>
+                <li title="手机泱品"><a href="#"><i class="fa fa-2x fa-mobile"></i></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content clear">
+        <div class="left fl">
+            <div class="sales clear">
+                <h3>活动促销</h3>
+                <div class="sales_show">
+                    <div class="sales_item fl">
+                        <a href="#" class="addCart">
+                            <h5>【上海对虾礼盒装】</h5>
+                            <span>￥168</span>
+                            <img src="Images/sale01.png" alt="">
+                        </a>
+                    </div>
+                    <div class="sales_item fl">
+                        <a href="#" class="addCart">
+                           <h5>【和润 低脂原味酸牛奶910g】</h5>
+                           <span>￥16.9</span>
+                           <img src="Images/sale02.png" alt="">
+                        </a>
+                    </div>
+                    <div class="sales_item fl">
+                        <a href="#" class="addCart">
+                            <h5>【湾仔码头 台湾红烧牛肉面】</h5>
+                            <span>￥14.9</span>
+                            <img src="Images/sale03.png" alt="">
+                        </a>
+                    </div>
+                    <div class="sales_item fl">
+                        <a href="#" class="addCart">
+                            <h5>【恒虎 泰国冷冻榴莲450g】</h5>
+                            <span>￥89</span>
+                            <img src="Images/sale04.png" alt="">
+                        </a>
+                    </div>
+                    <div class="sales_item fl">
+                        <a href="#" class="addCart">
+                            <h5>【红魔鬼赤霞干红 750ml】</h5>
+                            <span>￥168</span>
+                            <img src="Images/sale05.png" alt="">
+                        </a>
+                    </div>
+                    <div class="sales_item fl">
+                        <a href="#" class="addCart">
+                            <h5>【澳洲西冷牛排4份装】</h5>
+                            <span>￥16.9</span>
+                            <img src="Images/sale06.png" alt="">
+                        </a>
+                    </div>
+                    <div class="sales_item fl">
+                        <a href="#" class="addCart">
+                            <h5>【鲳鱼 450g】</h5>
+                            <span>￥14.9</span>
+                            <img src="Images/sale07.png" alt="">
+                        </a>
+                    </div>
+                    <div class="sales_item fl">
+                        <a href="#" class="addCart">
+                            <h5>【金轮王牌泰州香米 5kg】</h5>
+                            <span>￥89</span>
+                            <img src="Images/sale08.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flash_sale clear">
+                <h3 class="fl">限时抢购</h3>
+                <div class="time fl">
+                    <span>还剩下
+                    <span class="hour">23</span> : <span class="minute">59</span > : <span class="second">59</span>结束</span>
+                </div>
+                <div class="flashSale_show">
+                    <div class="flashSale_item fl">
+                        <a href="#" class="addCart">
+                            <img src="Images/sale09.png" alt="">
+                            <h5>英伯伦 波曼优质红茶精装</h5>
+                            <span>￥88</span>
+                        </a>
+                    </div>
+                    <div class="flashSale_item fl">
+                        <a href="#" class="addCart">
+                            <img src="Images/sale10.png" alt="">
+                            <h5>英伯伦 富士苹果 25g</h5>
+                            <span>￥52</span>
+                        </a>
+                    </div>
+                    <div class="flashSale_item fl">
+                        <a href="#" class="addCart">
+                            <img src="Images/sale11.png" alt="">
+                            <h5>可康 芒果味果冻420g*5</h5>
+                            <span>￥26</span>
+                        </a>
+                    </div>
+                    <div class="flashSale_item fl">
+                        <a href="#" class="addCart">
+                            <img src="Images/sale12.png" alt="">
+                            <h5>冠锦 无核西梅干 255g</h5>
+                            <span>￥36</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="flash_active">
+                <a href="#"><img src="Images/class/01.png" alt=""></a>
+            </div>
+            <div class="product_class fruits">
+                <div class="class_leftArea fl">
+                    <h3>粮油果蔬</h3>
+                    <ul class="class_variety">
+                        <li class="class_varietyItem"><a href="#">精制肉类</a></li>
+                        <li class="class_varietyItem"><a href="#">水产海鲜</a></li>
+                        <li class="class_varietyItem"><a href="#">家用蔬菜</a></li>
+                        <li class="class_varietyItem"><a href="#">新鲜水果</a></li>
+                        <li class="class_varietyItem"><a href="#">家禽蛋类</a></li>
+                        <li class="class_varietyItem"><a href="#"></a></li>
+                    </ul>
+                    <div class="class_title"><a href="#"><img src="Images/class/02.png" alt=""></a></div>
+                </div>
+                <div class="class_rightArea fl">
+                    <ul class="class_nav fl">
+                        <li class="active fl">
+                            <a href="#">精制肉类</a>
+                            <div class="icon">
+                                <div class="down_icon"></div>
+                            </div>
+                        </li>
+                        <li class="fl"><a href="#">水产海鲜</a></li>
+                        <li class="fl"><a href="#">家用蔬菜</a></li>
+                        <li class="fl"><a href="#">新鲜水果</a></li>
+                        <li class="fl"><a href="#">家禽蛋类</a></li>
+                    </ul>
+                    <div class="product_category fl">
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/03.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥15.5</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/04.png" alt="">
+                                <h5>知牧 有机放牧 羔羊肉块</h5>
+                                <span>￥106</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/05.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥79</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/06.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥168</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/07.png" alt="">
+                                <h5>大洋世家黄花鱼</h5>
+                                <span>￥46.8</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/08.png" alt="">
+                                <h5>和润 日式酸奶</h5>
+                                <span>￥32.9</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/09.png" alt="">
+                                <h5>美国 蛇果 6粒</h5>
+                                <span>￥48</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#">
+                                <img src="Images/class/10.png" alt="">
+                                <h5>越南 白心火龙果 4粒</h5>
+                                <span>￥59</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product_class seasoner">
+                <div class="class_leftArea fl">
+                    <h3>调味配料</h3>
+                    <ul class="class_variety">
+                        <li class="class_varietyItem"><a href="#">酱油酸醋</a></li>
+                        <li class="class_varietyItem"><a href="#">腐乳腌料</a></li>
+                        <li class="class_varietyItem"><a href="#">料酒调味</a></li>
+                        <li class="class_varietyItem"><a href="#">葱姜汤料</a></li>
+                        <li class="class_varietyItem"><a href="#"></a></li>
+                        <li class="class_varietyItem"><a href="#"></a></li>
+                    </ul>
+                    <div class="class_title"><a href="#"><img src="Images/class/11.png" alt=""></a></div>
+                </div>
+                <div class="class_rightArea fl">
+                    <ul class="class_nav fl">
+                        <li class="active fl">
+                            <a href="#">酱油酸醋</a>
+                            <div class="icon">
+                                <div class="down_icon"></div>
+                            </div>
+                        </li>
+                        <li class="fl"><a href="#">腐乳腌料</a></li>
+                        <li class="fl"><a href="#">料酒调味</a></li>
+                        <li class="fl"><a href="#">葱姜汤料</a></li>
+                    </ul>
+                    <div class="product_category fl">
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/03.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥15.5</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/04.png" alt="">
+                                <h5>知牧 有机放牧 羔羊肉块</h5>
+                                <span>￥106</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/05.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥79</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/06.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥168</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/07.png" alt="">
+                                <h5>大洋世家黄花鱼</h5>
+                                <span>￥46.8</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/08.png" alt="">
+                                <h5>和润 日式酸奶</h5>
+                                <span>￥32.9</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/09.png" alt="">
+                                <h5>美国 蛇果 6粒</h5>
+                                <span>￥48</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/10.png" alt="">
+                                <h5>越南 白心火龙果 4粒</h5>
+                                <span>￥59</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product_class snacks">
+                <div class="class_leftArea fl">
+                    <h3>零食小吃</h3>
+                    <ul class="class_variety">
+                        <li class="class_varietyItem"><a href="#">牛肉鸭脖</a></li>
+                        <li class="class_varietyItem"><a href="#">鸡肠凤爪</a></li>
+                        <li class="class_varietyItem"><a href="#">新鲜海苔</a></li>
+                        <li class="class_varietyItem"><a href="#">卤蛋火腿</a></li>
+                        <li class="class_varietyItem"><a href="#"></a></li>
+                        <li class="class_varietyItem"><a href="#"></a></li>
+                    </ul>
+                    <div class="class_title"><a href="#"><img src="Images/class/12.png" alt=""></a></div>
+                </div>
+                <div class="class_rightArea fl">
+                    <ul class="class_nav fl">
+                        <li class="active fl">
+                            <a href="#">牛肉鸭脖</a>
+                            <div class="icon">
+                                <div class="down_icon"></div>
+                            </div>
+                        </li>
+                        <li class="fl"><a href="#">鸡肠凤爪</a></li>
+                        <li class="fl"><a href="#">新鲜海苔</a></li>
+                        <li class="fl"><a href="#">卤蛋火腿</a></li>
+                    </ul>
+                    <div class="product_category fl">
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/03.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥15.5</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/04.png" alt="">
+                                <h5>知牧 有机放牧 羔羊肉块</h5>
+                                <span>￥106</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/05.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥79</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/06.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥168</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/07.png" alt="">
+                                <h5>大洋世家黄花鱼</h5>
+                                <span>￥46.8</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/08.png" alt="">
+                                <h5>和润 日式酸奶</h5>
+                                <span>￥32.9</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/09.png" alt="">
+                                <h5>美国 蛇果 6粒</h5>
+                                <span>￥48</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#">
+                                <img src="Images/class/10.png" alt="">
+                                <h5>越南 白心火龙果 4粒</h5>
+                                <span>￥59</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product_class conserve">
+                <div class="class_leftArea fl">
+                    <h3>干货蜜饯</h3>
+                    <ul class="class_variety">
+                        <li class="class_varietyItem"><a href="#">香菇菌类</a></li>
+                        <li class="class_varietyItem"><a href="#">滋补养生</a></li>
+                        <li class="class_varietyItem"><a href="#">桂圆栗子</a></li>
+                        <li class="class_varietyItem"><a href="#">熬粥专用</a></li>
+                        <li class="class_varietyItem"><a href="#"></a></li>
+                        <li class="class_varietyItem"><a href="#"></a></li>
+                    </ul>
+                    <div class="class_title"><a href="#"><img src="Images/class/13.png" alt=""></a></div>
+                </div>
+                <div class="class_rightArea fl">
+                    <ul class="class_nav fl">
+                        <li class="active fl">
+                            <a href="#">香菇菌类</a>
+                            <div class="icon">
+                                <div class="down_icon"></div>
+                            </div>
+                        </li>
+                        <li class="fl"><a href="#">滋补养生</a></li>
+                        <li class="fl"><a href="#">桂圆栗子</a></li>
+                        <li class="fl"><a href="#">熬粥专用</a></li>
+                    </ul>
+                    <div class="product_category fl">
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/03.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥15.5</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/04.png" alt="">
+                                <h5>知牧 有机放牧 羔羊肉块</h5>
+                                <span>￥106</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/05.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥79</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/06.png" alt="">
+                                <h5>大昌食品烹烹享麦香猪排</h5>
+                                <span>￥168</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/07.png" alt="">
+                                <h5>大洋世家黄花鱼</h5>
+                                <span>￥46.8</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/08.png" alt="">
+                                <h5>和润 日式酸奶</h5>
+                                <span>￥32.9</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/09.png" alt="">
+                                <h5>美国 蛇果 6粒</h5>
+                                <span>￥48</span>
+                            </a>
+                        </div>
+                        <div class="categoryItem fl">
+                            <a href="#" class="addCart">
+                                <img src="Images/class/10.png" alt="">
+                                <h5>越南 白心火龙果 4粒</h5>
+                                <span>￥59</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product_class specialsMap">
+                <div class="class_upArea">
+                    <h3>特产地图</h3>
+                </div>
+                <div class="class_downArea">
+                    <div class="left fl">
+                        <img src="Images/class/map.png" alt="">
+                    </div>
+                    <div class="right fr">
+                        <div class="up">
+                            <ul class="small_scroller">
+                                <li><img src="Images/class/map01.png" alt=""></li>
+                            </ul>
+                            <ul class="controller_btn">
+                                <li class="fl">
+                                    <a href="#"><img src="Images/class/map_icon_btn.png" alt="" ></a>
+                                </li>
+                                <li class="fl">
+                                    <a href="#"><img src="Images/class/map_icon_btn.png" alt="" style="left:-20px;"></a>
+                                </li>
+                                <li class="fl">
+                                    <a href="#"><img src="Images/class/map_icon_btn.png" alt="" style="left:-20px;"></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="middle">
+                            <div class="mid_left fl">
+                                <img class="" src="Images/class/06.png" alt="" >
+                            </div>
+                            <div class="mid_right fl">
+                                <h4 class="">金顺昌双虾仁上海市特产</h4>
+                                <div class="priseStyle">
+                                    <dl class="clear">
+                                        <dt class="fl">价格</dt>
+                                        <dd class="fl sale_prise">￥108.00</dd>
+                                    </dl>
+                                    <dl class="clear">
+                                        <dt class="fl">促销价</dt>
+                                        <dd class="fl flashSale">￥<span class="flashSale_prise">39.00</span><i class="icon_hot"><img src="Images/class/map_icon.png" alt=""></i></dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div class="mid_down">
+                                <div>
+                                    <input class="btn" type="button" value="立即购买">
+                                    <input type="button" value="加入购物车">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="down">
+                            <div class="categoryItem fl">
+                                <a href="#">
+                                    <img src="Images/class/05.png" alt="">
+                                    <h5>大昌食品烹烹享麦香猪排</h5>
+                                    <span>￥79</span>
+                                </a>
+                            </div>
+                            <div class="categoryItem fl">
+                                <a href="#">
+                                    <img src="Images/class/06.png" alt="">
+                                    <h5>大昌食品烹烹享麦香猪排</h5>
+                                    <span>￥168</span>
+                                </a>
+                            </div>
+                            <div class="categoryItem fl do_not">
+                                <a href="#">
+                                    <img src="Images/class/07.png" alt="">
+                                    <h5>大洋世家黄花鱼</h5>
+                                    <span>￥46.8</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="other">
+                    <div class="demo_line">
+                        <b></b>
+                        <h2>猜你喜欢</h2>
+                        <b></b>
+                    </div>
+                    <div class="categoryItem fl">
+                        <a href="#">
+                            <img src="Images/class/map02.png" alt="">
+                            <h5>秋冬天加厚双层加绒毛线韩版手套潮男士防风防滑开车</h5>
+                            <span>￥23.9</span>
+                        </a>
+                    </div>
+                    <div class="categoryItem fl">
+                        <a href="#">
+                            <img src="Images/class/map03.png" alt="">
+                            <h5>【香港发】天俊TISSOT俊雅石英男手表</h5>
+                            <span>￥1912</span>
+                        </a>
+                    </div>
+                    <div class="categoryItem fl">
+                        <a href="#">
+                            <img src="Images/class/map04.png" alt="">
+                            <h5>男士皮鞋真皮鞋子秋冬休闲男鞋英伦风休闲鞋系带潮鞋</h5>
+                            <span>￥128</span>
+                        </a>
+                    </div>
+                    <div class="categoryItem fl">
+                        <a href="#">
+                            <img src="Images/class/map05.png" alt="">
+                            <h5>立久佳 跑步机818家用款 多功能超静音减肥电动迷你折</h5>
+                            <span>￥818</span>
+                        </a>
+                    </div>
+                    <div class="categoryItem fl doNot">
+                        <a href="#">
+                            <img src="Images/class/map06.png" alt="">
+                            <h5>正品小米手环 安卓智能运动手环计步器 蓝牙防水腕带健</h5>
+                            <span>￥69</span>
+                        </a>
+                    </div>
+
+            </div>
+        </div>
+        <div class="right fr">
+            <div class="hot_list">
+                <h3>热卖榜</h3>
+                <a href="#">
+                    <ul class="hotList_item" style="background: url(Images/hot_list/sort.png) 21px 21px no-repeat;">
+                        <li class="fl">
+                            <img src="Images/hot_list/list01.png" alt="">
+                        </li>
+                        <li class="fl">
+                            <h5>苹果</h5>
+                            <span>销量300斤</span>
+                        </li>
+                    </ul>
+                </a>
+                <a href="#">
+                    <ul class="hotList_item" style="background: url(Images/hot_list/sort.png) 21px -46px no-repeat;">
+                        <li class="fl">
+                            <img src="Images/hot_list/list02.png" alt="">
+                        </li>
+                        <li class="fl">
+                            <h5>榴莲</h5>
+                            <span>销量287斤</span>
+                        </li>
+                    </ul>
+                </a>
+                <a href="#">
+                    <ul class="hotList_item" style="background: url(Images/hot_list/sort.png) 21px -113px no-repeat;">
+                        <li class="fl">
+                            <img src="Images/hot_list/list03.png" alt="">
+                        </li>
+                        <li class="fl">
+                            <h5>黄瓜</h5>
+                            <span>销量268斤</span>
+                        </li>
+                    </ul>
+                </a>
+                <a href="#">
+                    <ul class="hotList_item" style="background: url(Images/hot_list/sort.png) 21px -180px no-repeat;">
+                        <li class="fl">
+                            <img src="Images/hot_list/list04.png" alt="">
+                        </li>
+                        <li class="fl">
+                            <h5>樱桃</h5>
+                            <span>销量257斤</span>
+                        </li>
+                    </ul>
+                </a>
+                <a href="#">
+                    <ul class="hotList_item" style="background: url(Images/hot_list/sort.png) 21px -247px no-repeat;">
+                        <li class="fl">
+                            <img src="Images/hot_list/list05.png" alt="">
+                        </li>
+                        <li class="fl">
+                            <h5>橙子</h5>
+                            <span>销量233斤</span>
+                        </li>
+                    </ul>
+                </a>
+                <a href="#">
+                    <ul class="hotList_item" style="background: url(Images/hot_list/sort.png) 21px -314px no-repeat;">
+                        <li class="fl">
+                            <img src="Images/hot_list/list06.png" alt="">
+                        </li>
+                        <li class="fl">
+                            <h5>蜜桃</h5>
+                            <span>销量210斤</span>
+                        </li>
+                    </ul>
+                </a>
+            </div>
+
+            <div class="brand_zone">
+                <div>
+                    <div class="brandItem">
+                        <div class="brandItem_title fl">
+                            <img src="Images/brand_zone/brand_icon.png" alt="">
+                            <strong>上海xx水果集团有限公司</strong>
+                            <span>主产业：苹果 鸭梨 橙子 橘子....</span>
+                        </div>
+                        <img src="Images/brand_zone/brand02.png" alt="">
+                        <img src="Images/brand_zone/brand03.png" alt="">
+                        <img src="Images/brand_zone/brand04.png" alt="">
+                        <img src="Images/brand_zone/brand02.png" alt="">
+                        <img src="Images/brand_zone/brand03.png" alt="">
+                        <img src="Images/brand_zone/brand04.png" alt="">
+                    </div>
+                    <div class="brandLink">
+                        <div class="leftBrand">
+                            <a href="#"><img src="Images/brand_zone/brand05.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand07.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand06.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand08.png" alt=""></a>
+                        </div>
+                        <div class="rightBrand">
+                            <a href="#"><img src="Images/brand_zone/brand09.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand10.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand11.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand12.png" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="brandItem">
+                        <div class="brandItem_title fl">
+                            <img src="Images/brand_zone/brand_icon.png" alt="">
+                            <strong>上海xx水果集团有限公司</strong>
+                            <span>主产业：苹果 鸭梨 橙子 橘子....</span>
+                        </div>
+                        <img src="Images/brand_zone/brand02.png" alt="">
+                        <img src="Images/brand_zone/brand03.png" alt="">
+                        <img src="Images/brand_zone/brand04.png" alt="">
+                        <img src="Images/brand_zone/brand02.png" alt="">
+                        <img src="Images/brand_zone/brand03.png" alt="">
+                        <img src="Images/brand_zone/brand04.png" alt="">
+                    </div>
+                    <div class="brandLink">
+                        <div class="leftBrand">
+                            <a href="#"><img src="Images/brand_zone/brand05.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand07.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand06.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand08.png" alt=""></a>
+                        </div>
+                        <div class="rightBrand">
+                            <a href="#"><img src="Images/brand_zone/brand09.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand10.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand11.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand12.png" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="brandItem">
+                        <div class="brandItem_title fl">
+                            <img src="Images/brand_zone/brand_icon.png" alt="">
+                            <strong>上海xx水果集团有限公司</strong>
+                            <span>主产业：苹果 鸭梨 橙子 橘子....</span>
+                        </div>
+                        <img src="Images/brand_zone/brand02.png" alt="">
+                        <img src="Images/brand_zone/brand03.png" alt="">
+                        <img src="Images/brand_zone/brand04.png" alt="">
+                        <img src="Images/brand_zone/brand02.png" alt="">
+                        <img src="Images/brand_zone/brand03.png" alt="">
+                        <img src="Images/brand_zone/brand04.png" alt="">
+                    </div>
+                    <div class="brandLink">
+                        <div class="leftBrand">
+                            <a href="#"><img src="Images/brand_zone/brand05.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand07.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand06.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand08.png" alt=""></a>
+                        </div>
+                        <div class="rightBrand">
+                            <a href="#"><img src="Images/brand_zone/brand09.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand10.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand11.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand12.png" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="brandItem">
+                        <div class="brandItem_title fl">
+                            <img src="Images/brand_zone/brand_icon.png" alt="">
+                            <strong>上海xx水果集团有限公司</strong>
+                            <span>主产业：苹果 鸭梨 橙子 橘子....</span>
+                        </div>
+                        <img src="Images/brand_zone/brand02.png" alt="">
+                        <img src="Images/brand_zone/brand03.png" alt="">
+                        <img src="Images/brand_zone/brand04.png" alt="">
+                        <img src="Images/brand_zone/brand02.png" alt="">
+                        <img src="Images/brand_zone/brand03.png" alt="">
+                        <img src="Images/brand_zone/brand04.png" alt="">
+                    </div>
+                    <div class="brandLink">
+                        <div class="leftBrand">
+                            <a href="#"><img src="Images/brand_zone/brand05.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand07.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand06.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand08.png" alt=""></a>
+                        </div>
+                        <div class="rightBrand">
+                            <a href="#"><img src="Images/brand_zone/brand09.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand10.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand11.png" alt=""></a>
+                            <a href="#"><img src="Images/brand_zone/brand12.png" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="footer">
+    <div class="service">
+        <div class="wrap">
+            <div class="service_item fl">
+                <div class="service_icon fl" style="background: #f5f5f5 url(Images/foot/foot_icon.png) 0 9px no-repeat;"></div>
+                <h3>全球美食</h3>
+                <span>世界美味 优质优价</span>
+            </div>
+            <div class="service_item fl">
+                <div class="service_icon fl" style="background: #f5f5f5 url(Images/foot/foot_icon.png) 0 -50px no-repeat;"></div>
+                <h3>产地直供</h3>
+                <span>原汁原味 新鲜直达</span>
+            </div>
+            <div class="service_item fl">
+                <div class="service_icon fl" style="background: #f5f5f5 url(Images/foot/foot_icon.png) 0 -108px no-repeat;"></div>
+                <h3>全程冷链</h3>
+                <span>智能温控 冷箱护送</span>
+            </div>
+            <div class="service_item fl don">
+                <div class="service_icon fl" style="background: #f5f5f5 url(Images/foot/foot_icon.png) 0 -173px no-repeat;"></div>
+                <h3>顺丰直达</h3>
+                <span>领先物流 极速送达</span>
+            </div>
+        </div>
+    </div>
+    <div class="partner">
+        <div class="wrap">
+            <div><span>增值电信业务经营许可证：沪B2-20040012</span>
+                <span>互联网地图服务资质：乙测资字31202063</span></div>
+            <img src="Images/foot/foot_icon01.png" alt="">
+            <img src="Images/foot/foot_icon02.png" alt="">
+            <img src="Images/foot/foot_icon03.png" alt="">
+            <img src="Images/foot/foot_icon04.png" alt="">
+            <img src="Images/foot/foot_icon05.png" alt="">
+            <img src="Images/foot/foot_icon06.png" alt="">
+        </div>
+    </div>
+</div>
+</body>
+</html>
